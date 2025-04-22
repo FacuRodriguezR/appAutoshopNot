@@ -14,7 +14,11 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class HomePage implements OnInit {
   userName: string; 
   couponsActive: boolean;
-
+  points: number;
+  level: number;
+  user: User;
+  uid: string;
+  
 
   public coupons: Coupon[];
   public events: Events[];
@@ -36,6 +40,29 @@ export class HomePage implements OnInit {
     
   }
 
+  ionViewWillEnter(){
+    this.getCurrentUser()
+  }
+
+  getCurrentUser(){
+    let currentUser = this.utilsSvc.getFromLocalStorage('user');
+    if (!currentUser || !currentUser.uid) {
+      console.error('No hay usuario logueado');
+      return;
+    }
+  
+    const path = `users/${currentUser.uid}`;
+    const sub = this.firebaseSvc.getDocData(path).subscribe({
+      next: (res: any) => {
+        console.log('Usuario:', res);
+        this.user = res;
+        sub.unsubscribe();
+      },
+      error: (err) => console.error('Error al traer usuario:', err)
+    });
+  }
+
+
   signOut(){
     this.firebaseSvc.signOut();
   }
@@ -50,9 +77,14 @@ export class HomePage implements OnInit {
     const user = this.utilsSvc.getFromLocalStorage('user');
     if (user && user.name) {
       this.userName = user.name;
+      this.points = user.points;
+      this.level = user.level;
+      
       
     }
   }
+
+  
 
   goToCard() {
     const activeCoupons = this.coupons.filter((c) => c.active);
@@ -73,6 +105,8 @@ export class HomePage implements OnInit {
       console.error('Error al cargar eventos:', error);
     }
   }
+
+  
 
 
 }

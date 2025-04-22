@@ -28,6 +28,10 @@ const routes: Routes = [
     path: 'add-update-car',
     loadChildren: () => import('./add-update-car/add-update-car.module').then( m => m.AddUpdateCarPageModule)
   },
+  {
+    path: 'profile',
+    loadChildren: () => import('./pages/main/profile/profile.module').then( m => m.ProfilePageModule)
+  },
 ];
 
 @NgModule({

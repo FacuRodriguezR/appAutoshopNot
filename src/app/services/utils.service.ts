@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { LoadingController, ModalController, ModalOptions, ToastController, ToastOptions } from '@ionic/angular';
+import { AlertController, AlertOptions, LoadingController, ModalController, ModalOptions, ToastController, ToastOptions } from '@ionic/angular';
 import { Coupon, Events } from '../models/coupon';
 
 @Injectable({
@@ -12,9 +12,18 @@ export class UtilsService {
 
   constructor(private loadingController: LoadingController, private toastController: ToastController, private router: Router, private modalController: ModalController) { }
 
+
+  alertCtrl = inject(AlertController)
+
   loading() {
     return this.loadingController.create({ spinner: 'crescent' })
   }
+
+  // ============ Alert ===========
+async presentAlert(opts?: AlertOptions) {
+  const alert = await this.alertCtrl.create(opts);
+  await alert.present();
+}
 
 
   // toast

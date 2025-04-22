@@ -12,6 +12,13 @@ export const environment = {
     messagingSenderId: "984920975373",
     appId: "1:984920975373:web:5bcdf935950ce48909cd44"
   },
+  baseUrl: 'http://localhost:3000/', 
+  send_notification: 'send-notification',
+  send_notification_to_level: 'send-notification-to-level',
+  
+  subscribe_to_topic: 'subscribe-to-topic'
+
+
 };
 
 /*

@@ -12,6 +12,7 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import {AngularFireModule} from '@angular/fire/compat'
 import { environment } from 'src/environments/environment';
 import { AngularFireMessagingModule } from '@angular/fire/compat/messaging'
+import { provideHttpClient } from '@angular/common/http';
 
 
 
@@ -24,7 +25,7 @@ import { AngularFireMessagingModule } from '@angular/fire/compat/messaging'
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireMessagingModule,
     AppRoutingModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

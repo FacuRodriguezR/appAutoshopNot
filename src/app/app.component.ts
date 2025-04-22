@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { register } from 'swiper/element/bundle';
 import { ActionPerformed, PushNotificationSchema, PushNotifications, Token } from '@capacitor/push-notifications';
 import { Platform } from '@ionic/angular';
+import { UtilsService } from './services/utils.service';
 
 register();
 
@@ -17,6 +18,8 @@ export class AppComponent {
     this.showSplash();
     if(this.platform.is('capacitor')) this.initPush();
   }
+
+  utilsSvc = inject(UtilsService);
 
   initPush() {
     console.log('Initializing HomePage');
@@ -35,22 +38,27 @@ export class AppComponent {
 
     // On success, we should be able to receive notifications
     PushNotifications.addListener('registration', (token: Token) => {
-      alert('Push registration success, token: ' + token.value);
+      console.log('Push registration success, token: ' + token.value);
+      localStorage.setItem('token', token.value)
     });
 
     // Some issue with our setup and push will not work
     PushNotifications.addListener('registrationError', (error: any) => {
-      alert('Error on registration: ' + JSON.stringify(error));
+      console.log('Error on registration: ' + JSON.stringify(error));
     });
 
     // Show us the notification payload if the app is open on our device
     PushNotifications.addListener('pushNotificationReceived', (notification: PushNotificationSchema) => {
-      alert('Push received: ' + JSON.stringify(notification));
+      console.log('Push received: ' + JSON.stringify(notification));
+      this.utilsSvc.presentAlert({
+        header: notification.title,
+        message: notification.body
+      });
     });
 
     // Method called when tapping on a notification
     PushNotifications.addListener('pushNotificationActionPerformed', (notification: ActionPerformed) => {
-      alert('Push action performed: ' + JSON.stringify(notification));
+      console.log('Push action performed: ' + JSON.stringify(notification));
     });
   }
 

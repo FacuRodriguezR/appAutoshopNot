@@ -1,15 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { User } from '../models/user.model';
 import { getAuth, updateProfile } from 'firebase/auth';
-import {getFirestore, setDoc, doc, getDoc} from '@angular/fire/firestore'
+import {getFirestore, setDoc, doc, getDoc, collection, collectionData, query, docData} from '@angular/fire/firestore'
 import { UtilsService } from './utils.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirebaseService {
+
+
 
   constructor(private afAuth: AngularFireAuth, private firestore: AngularFirestore, private utilsService: UtilsService) {}
 
@@ -45,7 +47,15 @@ export class FirebaseService {
       return this.afAuth.sendPasswordResetEmail(email);
     }
 
+    getCollectionData(path: string, collectionQuery?: any) {
+      const ref = collection(getFirestore(), path);
+      return collectionData(query(ref, ...collectionQuery), { idField: 'id' });
+    }
 
+    getDocData(path: string) {
+      const ref = doc(getFirestore(), path);
+      return docData(ref, { idField: 'id' });
+    }
     
     // Base de datos
     

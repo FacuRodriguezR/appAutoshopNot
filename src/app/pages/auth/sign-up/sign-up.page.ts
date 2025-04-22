@@ -1,7 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Notification } from 'rxjs';
 import { User } from 'src/app/models/user.model';
 import { FirebaseService } from 'src/app/services/firebase.service';
+import { NotificationsService } from 'src/app/services/notifications.service';
 import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
@@ -15,11 +17,16 @@ export class SignUpPage implements OnInit {
     uid: new FormControl(''),
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required]),
-    name: new FormControl('', [Validators.required, Validators.minLength(4)])
+    name: new FormControl('', [Validators.required, Validators.minLength(4)]),
+    dni: new FormControl('', [Validators.required, Validators.minLength(7), Validators.maxLength(8)]),
+    token: new FormControl(localStorage.getItem('token')),
+    points: new FormControl(0),
+    level: new FormControl(1)
   })
 
   firebaseSvc = inject(FirebaseService);
-  utilsSvc = inject(UtilsService)
+  utilsSvc = inject(UtilsService);
+  notificationSvc = inject(NotificationsService)
 
   constructor() { }
 
@@ -67,6 +74,7 @@ export class SignUpPage implements OnInit {
 
       this.firebaseSvc.setDocument(path, this.form.value).then(res => {
 
+        this.subscribeToGeneralTopic();
 
         this.utilsSvc.saveInLocalStorage('user', this.form.value);
         this.utilsSvc.routerLink('/main/home');
@@ -89,6 +97,11 @@ export class SignUpPage implements OnInit {
       })
     }
 
+  }
+
+  subscribeToGeneralTopic(){
+    const token = localStorage.getItem('token')
+    this.notificationSvc.subscribeToTopic(token, 'general')
   }
 
 }

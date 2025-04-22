@@ -7,13 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { SucursalesPageRoutingModule } from './sucursales-routing.module';
 
 import { SucursalesPage } from './sucursales.page';
+import { HeaderComponent } from '../shared/components/header/header.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    SucursalesPageRoutingModule
+    SucursalesPageRoutingModule,
+    SharedModule
   ],
   declarations: [SucursalesPage],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
